@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript001</title>
+    <style>
+      button {
+        width: 200px;
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      onclick="
+        document.querySelector('body').style.backgroundColor = 'black'
+        document.querySelector('body').style.color = 'white'
+        "
+    >
+      NightMode
+    </button>
+    <button
+      onclick="
+    document.querySelector('body').style.backgroundColor = 'white'
+    document.querySelector('body').style.color = 'black'
+    "
+    >
+      WhiteMode
+    </button>
+    <button
+      id="modeBtn"
+      value="night"
+      onclick="
+      var target = document.querySelector('body');
+      if (this.value === 'night')
+      {
+        target.style.backgroundColor = 'black'
+        target.style.color = 'white'
+        this.value = 'white'
+      }
+      else
+      {
+        target.style.backgroundColor = 'white'
+        target.style.color = 'black'
+        this.value = 'night'
+      }
+    //   if (document.querySelector('#modeBtn').value === 'night')
+    //   {
+    //     document.querySelector('body').style.backgroundColor = 'black'
+    // document.querySelector('body').style.color = 'white'
+    // document.querySelector('#modeBtn').value = 'white'
+    //   }
+    // else
+    // {
+    //     document.querySelector('body').style.backgroundColor = 'white'
+    // document.querySelector('body').style.color = 'black'
+    // document.querySelector('#modeBtn').value = 'night'
+    // }
+
+    "
+    >
+      mode
+    </button>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Totam, aut
+      tempore expedita ut, blanditiis enim dolorem error iusto nulla laudantium
+      eveniet. Provident quas voluptatum impedit, earum illo et necessitatibus
+      maiores!
+    </p>
+  </body>
+</html>
