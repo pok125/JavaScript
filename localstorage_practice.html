@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      input {
+        display: block;
+        width: 300px;
+        height: 30px;
+        margin-bottom: 10px;
+      }
+
+      textarea {
+        display: block;
+        width: 300px;
+        height: 300px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        display: block;
+        width: 306px;
+        height: 30px;
+      }
+
+      .memoCard-btnGroup,
+      .updateModeBtn,
+      .section-btnGroup {
+        display: flex;
+        width: 306px;
+      }
+
+      #memoCardItem {
+        border: 2px solid skyblue;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <input type="text" name="" id="title" />
+        <textarea name="" id="content" cols="30" rows="10"></textarea>
+        <div class="section-btnGroup">
+          <div class="updateModeBtn" style="display: none">
+            <button class="updateBtn" onclick="update()">수정</button>
+            <button onclick="cancelUpateMode()">취소</button>
+          </div>
+          <div class="memoModeBtn" style="display: inherit">
+            <button onclick="saveNote()">메모</button>
+          </div>
+        </div>
+      </section>
+      <section id="display"></section>
+    </main>
+    <script>
+      let allMemo = JSON.parse(localStorage.getItem("allMemo"));
+      allMemo = allMemo ?? [];
+      render();
+
+      function saveNote() {
+        const title = document.getElementById("title").value;
+        const content = document.getElementById("content").value;
+
+        allMemo.push({ title, content, len: allMemo.length });
+
+        localStorage.setItem("allMemo", JSON.stringify(allMemo));
+        render();
+      }
+
+      function createMemoCard(num, title, content) {
+        const card = document.createElement("div");
+        const saveTitle = document.createElement("h2");
+        const saveContent = document.createElement("p");
+        const saveId = document.createElement("p");
+        const btnGroup = createCardBtnGroup(num);
+
+        card.setAttribute("id", "memoCardItem");
+        saveTitle.textContent = title;
+        saveContent.textContent = content;
+        saveId.textContent = num + 1;
+
+        card.append(saveId, saveTitle, saveContent, btnGroup);
+        return card;
+      }
+
+      function createCardBtnGroup(num) {
+        const btnGroup = document.createElement("div");
+        const deleteMemoBtn = document.createElement("button");
+        const updateMemoBtn = document.createElement("button");
+
+        btnGroup.classList.add("memoCard-btnGroup");
+        updateMemoBtn.textContent = "수정";
+        updateMemoBtn.setAttribute("id", num);
+        updateMemoBtn.setAttribute("onclick", "updateMode()");
+
+        deleteMemoBtn.textContent = "삭제";
+        deleteMemoBtn.setAttribute("id", num);
+        deleteMemoBtn.setAttribute("onclick", "remove()");
+
+        btnGroup.append(updateMemoBtn, deleteMemoBtn);
+        return btnGroup;
+      }
+
+      function render() {
+        const display = document.getElementById("display");
+        display.innerHTML = "";
+        setMemoText("", "");
+        showMemoBtn(true);
+
+        for (const item of allMemo) {
+          const memoCard = createMemoCard(item.len, item.title, item.content);
+          display.appendChild(memoCard);
+        }
+      }
+
+      function remove() {
+        const idx = allMemo.find((item) => item.len == event.srcElement.id);
+        if (idx) {
+          allMemo.splice(
+            allMemo.findIndex((item) => item.len == idx.len),
+            1
+          );
+        }
+        localStorage.setItem("allMemo", JSON.stringify(allMemo));
+        render();
+      }
+
+      function updateMode() {
+        const idx = allMemo.find((item) => item.len == event.srcElement.id);
+
+        if (idx) {
+          const updateBtn = document.querySelector(".updateBtn");
+
+          setMemoText(idx.title, idx.content);
+          updateBtn.setAttribute("id", idx.len);
+          showMemoBtn(false);
+        }
+      }
+
+      function cancelUpateMode() {
+        setMemoText("", "");
+        showMemoBtn(true);
+      }
+
+      function showMemoBtn(flag) {
+        const updateModeBtn = document.querySelector(".updateModeBtn");
+        const memoModeBtn = document.querySelector(".memoModeBtn");
+
+        if (flag) {
+          updateModeBtn.style.display = "none";
+          memoModeBtn.style.display = "inherit";
+        } else {
+          updateModeBtn.style.display = "inherit";
+          memoModeBtn.style.display = "none";
+        }
+      }
+
+      function update() {
+        const index = allMemo.findIndex(
+          (item) => item.len == event.srcElement.id
+        );
+        if (index != -1) {
+          const title = document.getElementById("title").value;
+          const content = document.getElementById("content").value;
+          allMemo[index].title = title;
+          allMemo[index].content = content;
+        }
+        localStorage.setItem("allMemo", JSON.stringify(allMemo));
+        render();
+      }
+
+      function setMemoText(title, content) {
+        const titleArea = document.getElementById("title");
+        const contentArea = document.getElementById("content");
+
+        titleArea.value = title;
+        contentArea.value = content;
+      }
+    </script>
+  </body>
+</html>
